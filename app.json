@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "version1",
-    "slug": "version1",
+    "name": "Belya's World",
+    "slug": "belyas-world",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
