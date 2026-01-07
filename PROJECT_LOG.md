@@ -10,4 +10,13 @@
     - **Menus**: Added Main Menu to Numbers Screen (Learn, Game, Math).
     - **Difficulty**: Added Easy (0-9) and Hard (10-20) modes.
     - **Feedback**: Implemented Visual (Red/Green) and Haptic (Vibration) feedback.
-    - **Scoring**: Added score tracking.
+    - **Advanced Mechanics**:
+        - **Timer**: Added countdown (45s Easy / 30s Hard).
+        - **Scoring**: Persistent High Score + Score tracking with penalties.
+        - **Penalty**: Wrong answer shakes screen, hides question, deducts point.
+        - **Hint**: Reveal answer option (costs point).
+        - **Celebration**: Confetti for new high scores.
+    - **Gameplay Balancing**:
+        - **Result Screen**: Themed buttons for Restart/Menu.
+        - **Logic Fixes**: Score Floor (Min 0), Hints cost point but award 0 on correct answer, Re-appearing question prompt.
+        - **Visual Feedback**: Added thick Red Border and Shake animation for wrong answers with 2s reset timer.
