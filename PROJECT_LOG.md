@@ -36,3 +36,20 @@
         - **Hidden Target**: Removed visual cues for numbers; players must listen.
         - **Replay Button**: Added prominent speaker button to repeat the question ("...nerede acaba?").
         - **Haptics**: Replaced voice countdown with haptic feedback for the last 3 seconds.
+    - **Learn Numbers Upgrade**:
+        - **Progressive Stages**: Added 3 stages (0-10, 10-20, Tens).
+        - **Visual Abacus**: Implemented Ten-Block visualization for understanding place value.
+        - **Interactive Counting**: Added audio-visual counting sequence ("On... on bir...") with synchronized highlights.
+        - **Milestones**: Added completion tracking (Stars) for exploring all numbers in a stage.
+    - **Polish & Animation**:
+        - **Juicy Pop**: Added bouncy "Pop" animations using standard `Animated` API (migrated from Reanimated for stability).
+        - **Sycned Speech**: Implemented recursive callbacks to ensure perfect sync between voice and animation.
+        - **Lifecycle Safety**: Ensured speech stops immediately when navigating away.
+    - **Layout Refinement**:
+        - **Centered Grid**: Implemented `FlatList` with 3 columns for perfect alignment.
+        - **Overflow Fix**: Wrapped numbers in fixed-size containers with `overflow: hidden` to prevent animation clippings.
+        - **Styling**: enhanced shadows and rounded corners for a cleaner look.
+    - **Candy Theme Redesign**:
+        - **3D Glossy Buttons**: Implemented `CandyButton` using `expo-linear-gradient` for a juicy, 3D toy-like feel with physical press displacement.
+        - **Floating Background**: Added `CandyBackground` with animated floating SVG bubbles for a dynamic atmosphere.
+        - **Visuals**: Updated palette to vibrant pastel candy colors.
