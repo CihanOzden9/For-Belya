@@ -20,3 +20,19 @@
         - **Result Screen**: Themed buttons for Restart/Menu.
         - **Logic Fixes**: Score Floor (Min 0), Hints cost point but award 0 on correct answer, Re-appearing question prompt.
         - **Visual Feedback**: Added thick Red Border and Shake animation for wrong answers with 2s reset timer.
+    - **Voice Integration**:
+        - **Tech**: Integrated `expo-speech` for TTS.
+        - **Features**:
+            - Task Announcement ("Can you find...").
+            - Voice Feedback for Wrong/Hint actions.
+            - Voice Feedback for Wrong/Hint actions.
+            - Countdown Voice (5, 4, 3, 2, 1).
+            - Countdown Voice (5, 4, 3, 2, 1).
+    - **Optimization & Localization**:
+        - **Turkish Support**: Full voice localization ('tr-TR') with natural phrases.
+        - **Fluidity**: Increased speech rate (1.25) and pitch (1.4).
+        - **Features**: Countdowns and specific number pronunciations in Turkish.
+    - **Voice-Only Mode**:
+        - **Hidden Target**: Removed visual cues for numbers; players must listen.
+        - **Replay Button**: Added prominent speaker button to repeat the question ("...nerede acaba?").
+        - **Haptics**: Replaced voice countdown with haptic feedback for the last 3 seconds.

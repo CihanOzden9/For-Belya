@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable, Animated, ScrollView, Easing, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../constants/colors';
-import { ArrowLeft, RefreshCw, Star, Play, BookOpen, Calculator, Trophy, Lightbulb, XCircle, Home } from 'lucide-react-native';
+import { ArrowLeft, RefreshCw, Star, Play, BookOpen, Calculator, Trophy, Lightbulb, XCircle, Home, Volume2 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import VoiceService from '../services/VoiceService';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const { width } = Dimensions.get('window');
@@ -107,6 +108,7 @@ export default function NumbersScreen({ navigation }) {
     // Persistence
     useEffect(() => {
         loadHighScore();
+        return () => VoiceService.stop();
     }, []);
 
     const loadHighScore = async () => {
@@ -135,10 +137,15 @@ export default function NumbersScreen({ navigation }) {
     useEffect(() => {
         let interval = null;
         if (mode === 'game' && timeLeft > 0) {
+            if (timeLeft <= 3) {
+                // Haptic countdown for last 3 seconds
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            }
             interval = setInterval(() => {
                 setTimeLeft(t => t - 1);
             }, 1000);
         } else if (mode === 'game' && timeLeft === 0) {
+            VoiceService.speak('Süre bitti!');
             endGame();
         }
         return () => clearInterval(interval);
@@ -158,6 +165,7 @@ export default function NumbersScreen({ navigation }) {
         if (isNewRecord) {
             setShowConfetti(true);
             setMessage('NEW RECORD! 🏆');
+            VoiceService.speak('Vay canına! Yeni rekor!');
         } else {
             setMessage('Game Over!');
         }
@@ -182,7 +190,14 @@ export default function NumbersScreen({ navigation }) {
         options.sort(() => Math.random() - 0.5);
 
         setQuestion({ target, options });
-        setMessage(`Find ${target}?`);
+        setMessage(''); // Clear visual message for Voice-Only mode
+        VoiceService.announceTask(target);
+    };
+
+    const handleReplay = () => {
+        if (!question) return;
+        const targetWord = VoiceService.getNumberWord(question.target);
+        VoiceService.speak(`${targetWord} nerede acaba?`);
     };
 
     const triggerShake = () => {
@@ -219,6 +234,7 @@ export default function NumbersScreen({ navigation }) {
             // Set wrong status immediately
             setAnswerStatus({ ...answerStatus, [ans]: 'wrong' });
             setMessage('Opps! 🙈');
+            VoiceService.speak('Hoppala! Bir daha dene bakalım!');
             setScore(s => Math.max(0, s - 1));
 
             // Hide target number logic
@@ -227,7 +243,7 @@ export default function NumbersScreen({ navigation }) {
             // Reset after 2 seconds
             setTimeout(() => {
                 setIsQuestionVisible(true);
-                setMessage(`Find ${question.target}?`);
+                setMessage('');
                 setAnswerStatus(prev => {
                     const newState = { ...prev };
                     delete newState[ans]; // Clear the red status
@@ -242,6 +258,8 @@ export default function NumbersScreen({ navigation }) {
         setScore(s => Math.max(0, s - 1)); // Penalty with Floor
         setHintUsed(true);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        const targetWord = VoiceService.getNumberWord(question.target);
+        VoiceService.speak(`İşte sana bir ipucu! ${targetWord} nerede acaba?`);
     };
 
     // --- Render Sections ---
@@ -313,12 +331,25 @@ export default function NumbersScreen({ navigation }) {
                 </Pressable>
             </View>
 
-            <Animated.View style={{ transform: [{ translateX: shakeAnim }] }}>
-                {isQuestionVisible ? (
-                    <Text style={styles.bigQuestion}>{message}</Text>
-                ) : (
-                    <Text style={[styles.bigQuestion, { opacity: 0 }]}>HIDDEN</Text> // Keep layout space or just hide
-                )}
+            <Animated.View style={{ transform: [{ translateX: shakeAnim }], alignItems: 'center', marginBottom: 20 }}>
+                <Pressable
+                    onPress={handleReplay}
+                    style={({ pressed }) => ({
+                        backgroundColor: COLORS.electricBlue,
+                        padding: 20,
+                        borderRadius: 50,
+                        opacity: pressed ? 0.8 : 1,
+                        elevation: 5,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 5,
+                        transform: [{ scale: pressed ? 0.95 : 1 }]
+                    })}
+                >
+                    <Volume2 color="#FFF" size={60} strokeWidth={2.5} />
+                </Pressable>
+                <Text style={{ marginTop: 10, color: COLORS.primaryText, fontSize: 18, fontWeight: '600' }}>Tekrar Dinle</Text>
             </Animated.View>
 
             <View style={styles.optionsGrid}>
